@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using CsvHelper;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace StateGroup
 {
@@ -22,7 +25,34 @@ namespace StateGroup
 
 		public void GetAndProcessFile()
 		{
-			throw new NotImplementedException();
+			if (FileExists())
+			{
+				string file = string.Empty;
+
+				if (!IsLocalPath)
+				{
+					using (WebClient client = new WebClient())
+					{
+						file = client.DownloadString(_path);
+					}
+				}
+				else
+				{
+					file = File.ReadAllText(_path);
+				}
+
+				if (string.IsNullOrEmpty(file))
+				{
+					if (IsJson(file))
+					{
+						var results = JsonConvert.DeserializeObject<List<Cliente>>(file);
+					}
+					else
+					{
+
+					}
+				}
+			}
 		}
 
 		public bool IsLocal()
@@ -63,6 +93,30 @@ namespace StateGroup
 					}
 				}
 			}
+		}
+
+		public bool IsJson(string file)
+		{
+			file = file.Trim();
+			if ((file.StartsWith("{") && file.EndsWith("}")) || (file.StartsWith("[") && file.EndsWith("]")))
+			{
+				try
+				{
+					var obj = JToken.Parse(file);
+					return true;
+				}
+				catch (JsonReaderException jex)
+				{
+					Console.WriteLine(jex.Message);
+					return false;
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.ToString());
+					return false;
+				}
+			}
+			return false;
 		}
 	}
 }

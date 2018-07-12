@@ -9,6 +9,8 @@ namespace StateGroup
 			if (args.Length > 0)
 			{
 				var path = args[0].Trim();
+				var w = new Work(path);
+				w.GetAndProcessFile();
 			}
 		}
 	}
