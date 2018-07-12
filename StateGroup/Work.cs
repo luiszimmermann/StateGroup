@@ -24,30 +24,32 @@ namespace StateGroup
 		private readonly bool _isLocalPath;
 		public bool IsLocalPath { get => _isLocalPath; }
 
+		private string _file { get; set; }
+
 		public List<Cliente> GetAndProcessFile()
 		{
 			var results = new List<Cliente>();
 			if (FileExists())
 			{
-				string file = string.Empty;
+				_file = string.Empty;
 
 				if (!IsLocalPath)
 				{
 					using (WebClient client = new WebClient())
 					{
-						file = client.DownloadString(_path);
+						_file = client.DownloadString(_path);
 					}
 				}
 				else
 				{
-					file = File.ReadAllText(_path);
+					_file = File.ReadAllText(_path);
 				}
 
-				if (!string.IsNullOrEmpty(file))
+				if (!string.IsNullOrEmpty(_file))
 				{
-					if (IsJson(file))
+					if (IsJson(_file))
 					{
-						results = JsonConvert.DeserializeObject<List<Cliente>>(file);
+						results = JsonConvert.DeserializeObject<List<Cliente>>(_file);
 					}
 					else
 					{
@@ -56,7 +58,7 @@ namespace StateGroup
 						using (var writer = new StreamWriter(stream))
 						using (var csv = new CsvReader(reader))
 						{
-							writer.Write(file);
+							writer.Write(_file);
 							writer.Flush();
 							stream.Position = 0;
 							csv.Configuration.RegisterClassMap<ClienteMap>();
@@ -109,8 +111,10 @@ namespace StateGroup
 			}
 		}
 
-		public bool IsJson(string file)
+		public bool IsJson(string file = null)
 		{
+			if (string.IsNullOrEmpty(file)) file = _file;
+
 			file = file.Trim();
 			if ((file.StartsWith("{") && file.EndsWith("}")) || (file.StartsWith("[") && file.EndsWith("]")))
 			{

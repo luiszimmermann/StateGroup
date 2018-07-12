@@ -1,6 +1,7 @@
 using System;
 using Xunit;
 using StateGroup;
+using System.Net;
 
 namespace StateGroup.Test
 {
@@ -32,6 +33,25 @@ namespace StateGroup.Test
 		{
 			var w = new Work("https://errorgist.githubusercontent.com/israelbgf/fbdb325cd35bc5b956b2e350d354648a/raw/b26d28f4c01a1ec7298020e88a200d292293ae4b/conteudojson");
 			Assert.False(w.FileExists());
+		}
+
+		[Fact]
+		public void LocalDontExists()
+		{
+			var w = new Work("/home/teste/testecsv");
+			Assert.False(w.FileExists());
+		}
+
+		[Fact]
+		public void HttpIsJson()
+		{
+			var w = new Work("https://gist.githubusercontent.com/israelbgf/fbdb325cd35bc5b956b2e350d354648a/raw/b26d28f4c01a1ec7298020e88a200d292293ae4b/conteudojson");
+			using (WebClient client = new WebClient())
+			{
+				var file = client.DownloadString(w.Path);
+				Assert.True(w.IsJson(file));
+			}
+
 		}
 	}
 }
