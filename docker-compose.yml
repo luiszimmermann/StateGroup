@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  stategroup:
+    image: ${DOCKER_REGISTRY}stategroup
+    build:
+      context: .
+      dockerfile: StateGroup/Dockerfile
