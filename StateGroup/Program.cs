@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace StateGroup
 {
@@ -10,7 +11,14 @@ namespace StateGroup
 			{
 				var path = args[0].Trim();
 				var w = new Work(path);
-				w.GetAndProcessFile();
+				var results = w.GetAndProcessFile();
+
+				var grouped = results.GroupBy(x => x.Estado.Trim());
+
+				foreach (var g in grouped.OrderByDescending(x => x.Count()))
+				{
+					Console.WriteLine(string.Concat(g.Key, ": ", g.Count()));
+				}
 			}
 		}
 	}
