@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using CsvHelper;
@@ -23,8 +24,9 @@ namespace StateGroup
 		private readonly bool _isLocalPath;
 		public bool IsLocalPath { get => _isLocalPath; }
 
-		public void GetAndProcessFile()
+		public List<Cliente> GetAndProcessFile()
 		{
+			var results = new List<Cliente>();
 			if (FileExists())
 			{
 				string file = string.Empty;
@@ -41,18 +43,30 @@ namespace StateGroup
 					file = File.ReadAllText(_path);
 				}
 
-				if (string.IsNullOrEmpty(file))
+				if (!string.IsNullOrEmpty(file))
 				{
 					if (IsJson(file))
 					{
-						var results = JsonConvert.DeserializeObject<List<Cliente>>(file);
+						results = JsonConvert.DeserializeObject<List<Cliente>>(file);
 					}
 					else
 					{
+						using (var stream = new MemoryStream())
+						using (var reader = new StreamReader(stream))
+						using (var writer = new StreamWriter(stream))
+						using (var csv = new CsvReader(reader))
+						{
+							writer.Write(file);
+							writer.Flush();
+							stream.Position = 0;
+							csv.Configuration.RegisterClassMap<ClienteMap>();
 
+							results = csv.GetRecords<Cliente>().ToList();
+						}
 					}
 				}
 			}
+			return results;
 		}
 
 		public bool IsLocal()
