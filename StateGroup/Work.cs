@@ -60,8 +60,14 @@ namespace StateGroup
 							writer.Flush();
 							stream.Position = 0;
 							csv.Configuration.RegisterClassMap<ClientMap>();
-
-							results = csv.GetRecords<Client>().ToList();
+							try
+							{
+								results = csv.GetRecords<Client>().ToList();
+							}
+							catch (ValidationException ex)
+							{
+								Console.WriteLine("Invalid file.");
+							}
 						}
 					}
 				}
