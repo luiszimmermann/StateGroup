@@ -11,11 +11,9 @@ namespace StateGroup
 			{
 				var path = args[0].Trim();
 				var worker = new Work(path);
-				var results = worker.GetAndProcessFile();
+				worker.GetAndProcessFile();
 
-				var grouped = results.GroupBy(x => x.State.Trim());
-
-				foreach (var g in grouped.OrderBy(x => x.Key))
+				foreach (var g in worker.GetClientsGroupedAndOrderedByState())
 				{
 					Console.WriteLine(string.Concat(g.Key, ": ", g.Count()));
 				}

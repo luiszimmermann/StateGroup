@@ -79,9 +79,8 @@ namespace StateGroup.Test
 		public void StateCountTest()
 		{
 			var worker = new Work("https://gist.githubusercontent.com/israelbgf/fbdb325cd35bc5b956b2e350d354648a/raw/b26d28f4c01a1ec7298020e88a200d292293ae4b/conteudojson");
-			var results = worker.GetAndProcessFile();
-			var grouped = results.GroupBy(x => x.State.Trim());
-			Assert.Equal(3, grouped.Count());
+			worker.GetAndProcessFile();
+			Assert.Equal(3, worker.GetClientsGroupedAndOrderedByState().Count());
 		}
 
 		[Fact]
@@ -89,7 +88,7 @@ namespace StateGroup.Test
 		{
 			var worker = new Work("https://gist.githubusercontent.com/israelbgf/fbdb325cd35bc5b956b2e350d354648a/raw/b26d28f4c01a1ec7298020e88a200d292293ae4b/conteudojson");
 			var results = worker.GetAndProcessFile();
-			var grouped = results.GroupBy(x => x.State.Trim()).OrderBy(x => x.Key);
+			var grouped = worker.GetClientsGroupedAndOrderedByState();
 			Assert.Equal("PR", grouped.ElementAt(0).Key);
 			Assert.Equal("SC", grouped.ElementAt(1).Key);
 			Assert.Equal("SP", grouped.ElementAt(2).Key);

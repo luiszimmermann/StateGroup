@@ -16,13 +16,18 @@ namespace StateGroup
 		{
 			_path = path;
 			_isLocalPath = IsLocal();
+			_lastProcessedClients = new List<Client>();
 		}
 
 		private readonly string _path;
 		public string Path { get => _path; }
 
 		private readonly bool _isLocalPath;
+
 		public bool IsLocalPath { get => _isLocalPath; }
+
+		private List<Client> _lastProcessedClients;
+		public List<Client> LastProcessedClients { get => _lastProcessedClients; set => _lastProcessedClients = value; }
 
 		public List<Client> GetAndProcessFile()
 		{
@@ -80,6 +85,8 @@ namespace StateGroup
 			{
 				Console.WriteLine("File not found.");
 			}
+
+			LastProcessedClients = results;
 			return results;
 		}
 
@@ -146,6 +153,11 @@ namespace StateGroup
 				}
 			}
 			return false;
+		}
+
+		public IOrderedEnumerable<IGrouping<string, Client>> GetClientsGroupedAndOrderedByState()
+		{
+			return _lastProcessedClients.GroupBy(x => x.State.Trim()).OrderBy(x => x.Key);
 		}
 	}
 }
