@@ -71,11 +71,12 @@ namespace StateGroup
 
 		public bool IsLocal()
 		{
-			if (_path.ToUpper().StartsWith("HTTP"))
+			if (_path.ToUpper().StartsWith("HTTP:\\") || _path.ToUpper().StartsWith("HTTPS:\\"))
 			{
 				return false;
 			}
-			return true;
+
+			return new Uri(_path).IsFile;
 		}
 
 		public bool FileExists()
