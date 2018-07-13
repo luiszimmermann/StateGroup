@@ -57,6 +57,17 @@ namespace StateGroup.Test
 		}
 
 		[Fact]
+		public void HttpIsNotJson()
+		{
+			var w = new Work("https://gist.githubusercontent.com/israelbgf/782a92243d0ba1ff47f9aaf46358f870/raw/86c7a2bf04242bd4262b203ca725ce1da69f035d/conteudocsv");
+			using (WebClient client = new WebClient())
+			{
+				var file = client.DownloadString(w.Path);
+				Assert.False(w.IsJson(file));
+			}
+		}
+
+		[Fact]
 		public void ClientCountTest()
 		{
 			var worker = new Work("https://gist.githubusercontent.com/israelbgf/fbdb325cd35bc5b956b2e350d354648a/raw/b26d28f4c01a1ec7298020e88a200d292293ae4b/conteudojson");
@@ -71,6 +82,17 @@ namespace StateGroup.Test
 			var results = worker.GetAndProcessFile();
 			var grouped = results.GroupBy(x => x.State.Trim());
 			Assert.Equal(3, grouped.Count());
+		}
+
+		[Fact]
+		public void StateOrderTest()
+		{
+			var worker = new Work("https://gist.githubusercontent.com/israelbgf/fbdb325cd35bc5b956b2e350d354648a/raw/b26d28f4c01a1ec7298020e88a200d292293ae4b/conteudojson");
+			var results = worker.GetAndProcessFile();
+			var grouped = results.GroupBy(x => x.State.Trim()).OrderBy(x => x.Key);
+			Assert.Equal("PR", grouped.ElementAt(0).Key);
+			Assert.Equal("SC", grouped.ElementAt(1).Key);
+			Assert.Equal("SP", grouped.ElementAt(2).Key);
 		}
 
 		[Fact]
