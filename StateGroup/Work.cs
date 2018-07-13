@@ -65,6 +65,14 @@ namespace StateGroup
 						}
 					}
 				}
+				else
+				{
+					Console.WriteLine("Empty file.");
+				}
+			}
+			else
+			{
+				Console.WriteLine("File not found.");
 			}
 			return results;
 		}
