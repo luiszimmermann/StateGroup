@@ -51,7 +51,6 @@ namespace StateGroup.Test
 				var file = client.DownloadString(w.Path);
 				Assert.True(w.IsJson(file));
 			}
-
 		}
 	}
 }

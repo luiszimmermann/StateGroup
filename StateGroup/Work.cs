@@ -24,32 +24,30 @@ namespace StateGroup
 		private readonly bool _isLocalPath;
 		public bool IsLocalPath { get => _isLocalPath; }
 
-		private string _file { get; set; }
-
 		public List<Client> GetAndProcessFile()
 		{
 			var results = new List<Client>();
 			if (FileExists())
 			{
-				_file = string.Empty;
+				var file = string.Empty;
 
-				if (!IsLocalPath)
+				if (IsLocalPath)
 				{
-					using (WebClient client = new WebClient())
-					{
-						_file = client.DownloadString(_path);
-					}
+					file = File.ReadAllText(_path);
 				}
 				else
 				{
-					_file = File.ReadAllText(_path);
+					using (WebClient client = new WebClient())
+					{
+						file = client.DownloadString(_path);
+					}
 				}
 
-				if (!string.IsNullOrEmpty(_file))
+				if (!string.IsNullOrEmpty(file))
 				{
-					if (IsJson(_file))
+					if (IsJson(file))
 					{
-						results = JsonConvert.DeserializeObject<List<Client>>(_file);
+						results = JsonConvert.DeserializeObject<List<Client>>(file);
 					}
 					else
 					{
@@ -58,7 +56,7 @@ namespace StateGroup
 						using (var writer = new StreamWriter(stream))
 						using (var csv = new CsvReader(reader))
 						{
-							writer.Write(_file);
+							writer.Write(file);
 							writer.Flush();
 							stream.Position = 0;
 							csv.Configuration.RegisterClassMap<ClientMap>();
@@ -111,10 +109,8 @@ namespace StateGroup
 			}
 		}
 
-		public bool IsJson(string file = null)
+		public bool IsJson(string file)
 		{
-			if (string.IsNullOrEmpty(file)) file = _file;
-
 			file = file.Trim();
 			if ((file.StartsWith("{") && file.EndsWith("}")) || (file.StartsWith("[") && file.EndsWith("]")))
 			{
