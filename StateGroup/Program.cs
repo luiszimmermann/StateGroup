@@ -15,7 +15,7 @@ namespace StateGroup
 
 				var grouped = results.GroupBy(x => x.State.Trim());
 
-				foreach (var g in grouped.OrderByDescending(x => x.Count()))
+				foreach (var g in grouped.OrderBy(x => x.Key))
 				{
 					Console.WriteLine(string.Concat(g.Key, ": ", g.Count()));
 				}
