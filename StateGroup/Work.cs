@@ -26,9 +26,9 @@ namespace StateGroup
 
 		private string _file { get; set; }
 
-		public List<Cliente> GetAndProcessFile()
+		public List<Client> GetAndProcessFile()
 		{
-			var results = new List<Cliente>();
+			var results = new List<Client>();
 			if (FileExists())
 			{
 				_file = string.Empty;
@@ -49,7 +49,7 @@ namespace StateGroup
 				{
 					if (IsJson(_file))
 					{
-						results = JsonConvert.DeserializeObject<List<Cliente>>(_file);
+						results = JsonConvert.DeserializeObject<List<Client>>(_file);
 					}
 					else
 					{
@@ -61,9 +61,9 @@ namespace StateGroup
 							writer.Write(_file);
 							writer.Flush();
 							stream.Position = 0;
-							csv.Configuration.RegisterClassMap<ClienteMap>();
+							csv.Configuration.RegisterClassMap<ClientMap>();
 
-							results = csv.GetRecords<Cliente>().ToList();
+							results = csv.GetRecords<Client>().ToList();
 						}
 					}
 				}
