@@ -1,6 +1,7 @@
 # StateGroup
 
 [![Build status](https://ci.appveyor.com/api/projects/status/rowyp7giphmp8ofs?svg=true)](https://ci.appveyor.com/project/luiszimmermann/stategroup)
+
 State Group and Order receiving a csv or json file. Remote or local.
 
 ## Getting Started
