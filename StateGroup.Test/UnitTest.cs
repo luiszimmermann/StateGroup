@@ -14,6 +14,7 @@ namespace StateGroup.Test
 			Assert.False(w.IsLocalPath);
 		}
 
+		[Trait("Linux", "true")]
 		[Fact]
 		public void TestLocal()
 		{
@@ -35,6 +36,7 @@ namespace StateGroup.Test
 			Assert.False(w.FileExists());
 		}
 
+		[Trait("Linux", "true")]
 		[Fact]
 		public void LocalDontExists()
 		{

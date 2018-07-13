@@ -1,5 +1,6 @@
 # StateGroup
 
+[![Build status](https://ci.appveyor.com/api/projects/status/rowyp7giphmp8ofs?svg=true)](https://ci.appveyor.com/project/luiszimmermann/stategroup)
 State Group and Order receiving a csv or json file. Remote or local.
 
 ## Getting Started
@@ -56,6 +57,20 @@ docker run --rm -ti -v /filesfortest:/tests stategroup /tests/conteudojson
 PR: 4
 SC: 9
 SP: 1
+```
+
+## Testing
+
+Go to the root folder and run
+
+```
+dotnet test .\StateGroup.Test\StateGroup.Test.csproj
+```
+
+If you are using windows, ignore the only Linux tests
+
+```
+dotnet test .\StateGroup.Test\StateGroup.Test.csproj --filter Linux!=true
 ```
 
 ## Built With
